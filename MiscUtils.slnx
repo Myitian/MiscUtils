@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="KeyCodeMappings/KeyCodeMappings.csproj" />
+  <Project Path="SimpleAdbSocket/SimpleAdbSocket.csproj" Id="38e575c0-c4e8-4461-8e1a-2512eb243ebb" />
+  <Project Path="SimpleSetupDiQuery/SimpleSetupDiQuery.csproj" />
+  <Project Path="SimpleWinUSB/SimpleWinUSB.csproj" Id="922f9501-34c5-4c2b-ae5d-9444b5845bd6" />
+  <Project Path="Test/Test.csproj" Id="928cb61e-e38d-464f-b5af-b6127f7685e8" />
+</Solution>
