@@ -1,8 +1,8 @@
 <Solution>
   <Project Path="KeyCodeMappings/KeyCodeMappings.csproj" />
-  <Project Path="SimpleAdbSocket/SimpleAdbSocket.csproj" Id="38e575c0-c4e8-4461-8e1a-2512eb243ebb" />
+  <Project Path="SimpleAdbSocket/SimpleAdbSocket.csproj" />
   <Project Path="SimpleSetupDiQuery/SimpleSetupDiQuery.csproj" />
-  <Project Path="SimpleWin32Input/SimpleWin32Input.csproj" Id="75d980dd-11df-4cab-9688-a2ed0c1ca26e" />
-  <Project Path="SimpleWinUSB/SimpleWinUSB.csproj" Id="922f9501-34c5-4c2b-ae5d-9444b5845bd6" />
-  <Project Path="Test/Test.csproj" Id="928cb61e-e38d-464f-b5af-b6127f7685e8" />
+  <Project Path="SimpleWin32Input/SimpleWin32Input.csproj" />
+  <Project Path="SimpleWinUSB/SimpleWinUSB.csproj" />
+  <Project Path="Test/Test.csproj" />
 </Solution>

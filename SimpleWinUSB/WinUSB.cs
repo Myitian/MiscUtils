@@ -79,6 +79,8 @@ public partial struct WinUSB : IDisposable
     {
         return WinUsb_QueryPipe(_hWinUSB, alternateInterfaceNumber, pipeIndex, out pipeInfo);
     }
+    // read/write for pipes will be added in a future version.
+
     public void Dispose()
     {
         if (_hWinUSB is not -1)
