@@ -5,14 +5,25 @@ using System.Runtime.InteropServices;
 
 namespace SimpleSetupDiQuery;
 
+
 [StructLayout(LayoutKind.Sequential)]
 public partial struct DeviceInterfaceData(nint deviceInfoSet)
 {
+    [StructLayout(LayoutKind.Sequential)]
+    struct SP_DEVICE_INTERFACE_DATA
+    {
+        // dummy impl for calculating size
+        public int cbSize;
+        public Guid InterfaceClassGuid;
+        public uint Flags;
+        public nint Reserved;
+        public static readonly int Size = Unsafe.SizeOf<SP_DEVICE_INTERFACE_DATA>();
+    }
     // SP_DEVICE_INTERFACE_DATA
-    public readonly int cbSize = 32;
+    public readonly int cbSize = SP_DEVICE_INTERFACE_DATA.Size;
     public Guid InterfaceClassGuid;
     public uint Flags;
-    public ulong Reserved;
+    public nint Reserved;
     // Custom extended data
     private readonly nint DeviceInfoSet = deviceInfoSet;
 

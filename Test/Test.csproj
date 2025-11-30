@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleAdbSocket\SimpleAdbSocket.csproj" />
     <ProjectReference Include="..\SimpleSetupDiQuery\SimpleSetupDiQuery.csproj" />
+    <ProjectReference Include="..\SimpleWin32Input\SimpleWin32Input.csproj" />
     <ProjectReference Include="..\SimpleWinUSB\SimpleWinUSB.csproj" />
   </ItemGroup>
 

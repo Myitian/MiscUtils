@@ -32,7 +32,7 @@ public class AdbTcpTunnel : IDisposable, IAsyncDisposable
         string mode = reverse ? "reverse" : "forward";
         string message;
         int code;
-        using (Process? createProc = adb0.Execute(serial is null ?
+        using (Process? createProc = adb0.Execute(serial is null ? (ReadOnlySpan<string>)
             [mode, $"tcp:{localPort}", $"tcp:{remotePort}"] :
             ["-s", serial, mode, $"tcp:{localPort}", $"tcp:{remotePort}"]))
         {
@@ -49,7 +49,7 @@ public class AdbTcpTunnel : IDisposable, IAsyncDisposable
         if (code != 0 || !(string.IsNullOrEmpty(message) || int.TryParse(message, out localPort)))
         {
             if (!noThrow)
-                throw new Exception(message);
+                throw new Exception(message) { HResult = code };
             return null;
         }
         TcpClient? client = null;
@@ -65,7 +65,7 @@ public class AdbTcpTunnel : IDisposable, IAsyncDisposable
         catch
         {
             client?.Dispose();
-            using (Process? removeProc = adb0.Execute(serial is null ?
+            using (Process? removeProc = adb0.Execute(serial is null ? (ReadOnlySpan<string>)
                 [mode, "--remove", $"tcp:{localPort}"] :
                 ["-s", serial, mode, "--remove", $"tcp:{localPort}"]))
                 if (removeProc is not null)
@@ -82,7 +82,7 @@ public class AdbTcpTunnel : IDisposable, IAsyncDisposable
             return;
         Client?.Dispose();
         string mode = IsReverse ? "reverse" : "forward";
-        using (Process? removeProc = Adb.Execute(Serial is null ?
+        using (Process? removeProc = Adb.Execute(Serial is null ? (ReadOnlySpan<string>)
             [mode, "--remove", $"tcp:{LocalPort}"] :
             ["-s", Serial, mode, "--remove", $"tcp:{LocalPort}"]))
             removeProc?.WaitForExit();
@@ -96,7 +96,7 @@ public class AdbTcpTunnel : IDisposable, IAsyncDisposable
             return;
         Client?.Dispose();
         string mode = IsReverse ? "reverse" : "forward";
-        using (Process? removeProc = Adb.Execute(Serial is null ?
+        using (Process? removeProc = Adb.Execute(Serial is null ? (ReadOnlySpan<string>)
             [mode, "--remove", $"tcp:{LocalPort}"] :
             ["-s", Serial, mode, "--remove", $"tcp:{LocalPort}"]))
             if (removeProc is not null)

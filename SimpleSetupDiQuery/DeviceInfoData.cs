@@ -8,11 +8,21 @@ namespace SimpleSetupDiQuery;
 [StructLayout(LayoutKind.Sequential)]
 public partial struct DeviceInfoData(nint deviceInfoSet)
 {
+    [StructLayout(LayoutKind.Sequential)]
+    struct SP_DEVINFO_DATA
+    {
+        // dummy impl for calculating size
+        public int cbSize;
+        public Guid InterfaceClassGuid;
+        public uint DevInst;
+        public nint Reserved;
+        public static readonly int Size = Unsafe.SizeOf<SP_DEVINFO_DATA>();
+    }
     // SP_DEVINFO_DATA
-    public readonly int cbSize = 32;
+    public readonly int cbSize = SP_DEVINFO_DATA.Size;
     public Guid InterfaceClassGuid;
     public uint DevInst;
-    public ulong Reserved;
+    public nint Reserved;
     // Custom extended data
     private readonly nint DeviceInfoSet = deviceInfoSet;
 

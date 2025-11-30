@@ -78,7 +78,7 @@ public readonly struct Adb
             info.ArgumentList.Add(arg);
         return Process.Start(info);
     }
-    public Process? Run(IEnumerable<string> arguments)
+    public Process? Execute(IEnumerable<string> arguments)
     {
         ProcessStartInfo info = new()
         {
