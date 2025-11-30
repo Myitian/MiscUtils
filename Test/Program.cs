@@ -3,6 +3,7 @@ using SimpleAdbSocket;
 using SimpleSetupDiQuery;
 using SimpleWin32Input;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Test;
@@ -14,7 +15,7 @@ public class Program
 
     public static async Task Main()
     {
-
+        Console.WriteLine(Unsafe.SizeOf<Input>());
         _ = Task.Run(() =>
         {
             Thread.Sleep(100);

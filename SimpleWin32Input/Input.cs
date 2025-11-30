@@ -3,33 +3,44 @@ using System.Runtime.InteropServices;
 
 namespace SimpleWin32Input;
 
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Sequential)]
 public partial struct Input
 {
-    [FieldOffset(0)]
     public InputType Type;
-    [FieldOffset(8)]
-    public MouseInput MI;
-    [FieldOffset(8)]
-    public KeyboardInput KI;
-    [FieldOffset(8)]
-    public HardwareInput HI;
+    public Union U;
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Union
+    {
+        [FieldOffset(0)]
+        public MouseInput MI;
+        [FieldOffset(0)]
+        public KeyboardInput KI;
+        [FieldOffset(0)]
+        public HardwareInput HI;
+
+        public static implicit operator Union(MouseInput mi) => new() { MI = mi };
+        public static implicit operator Union(KeyboardInput ki) => new() { KI = ki };
+        public static implicit operator Union(HardwareInput hi) => new() { HI = hi };
+        public static explicit operator MouseInput(Union u) => u.MI;
+        public static explicit operator KeyboardInput(Union u) => u.KI;
+        public static explicit operator HardwareInput(Union u) => u.HI;
+    }
     public static readonly int Size = Unsafe.SizeOf<Input>();
 
     public Input(MouseInput mi)
     {
         Type = InputType.Mouse;
-        MI = mi;
+        U.MI = mi;
     }
     public Input(KeyboardInput ki)
     {
         Type = InputType.Keyboard;
-        KI = ki;
+        U.KI = ki;
     }
     public Input(HardwareInput hi)
     {
         Type = InputType.Hardware;
-        HI = hi;
+        U.HI = hi;
     }
 
     [LibraryImport("user32", SetLastError = true)]
@@ -43,7 +54,7 @@ public partial struct Input
     public static implicit operator Input(MouseInput mi) => new(mi);
     public static implicit operator Input(KeyboardInput ki) => new(ki);
     public static implicit operator Input(HardwareInput hi) => new(hi);
-    public static explicit operator MouseInput(Input input) => input.MI;
-    public static explicit operator KeyboardInput(Input input) => input.KI;
-    public static explicit operator HardwareInput(Input input) => input.HI;
+    public static explicit operator MouseInput(Input input) => input.U.MI;
+    public static explicit operator KeyboardInput(Input input) => input.U.KI;
+    public static explicit operator HardwareInput(Input input) => input.U.HI;
 }
