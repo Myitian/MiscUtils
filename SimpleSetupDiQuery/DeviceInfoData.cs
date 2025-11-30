@@ -11,7 +11,7 @@ public partial struct DeviceInfoData(nint deviceInfoSet)
     [StructLayout(LayoutKind.Sequential)]
     struct SP_DEVINFO_DATA
     {
-        // dummy impl for calculating size
+        // dummy struct for calculating size
         public int cbSize;
         public Guid InterfaceClassGuid;
         public uint DevInst;

@@ -1,6 +1,7 @@
 namespace SimpleWin32Input;
 
 #pragma warning disable CA1069
+// Based on WinUser.h
 public enum VirtualKey : ushort
 {
     None = 0x00,

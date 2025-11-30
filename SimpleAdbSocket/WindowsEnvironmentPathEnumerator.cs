@@ -99,8 +99,9 @@ public ref struct WindowsEnvironmentPathEnumerator(ReadOnlySpan<char> chars)
         finished = false;
         Current = [];
     }
-
+#if NET9_0_OR_GREATER
     public readonly void Dispose()
     {
     }
+#endif
 }

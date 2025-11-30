@@ -12,7 +12,7 @@ public partial struct DeviceInterfaceData(nint deviceInfoSet)
     [StructLayout(LayoutKind.Sequential)]
     struct SP_DEVICE_INTERFACE_DATA
     {
-        // dummy impl for calculating size
+        // dummy struct for calculating size
         public int cbSize;
         public Guid InterfaceClassGuid;
         public uint Flags;

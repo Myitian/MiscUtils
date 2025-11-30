@@ -104,6 +104,5 @@ public partial struct WinUSB : IDisposable
     {
         NORMAL = 0x00000080,
         OVERLAPPED = 0x40000000,
-        NO_BUFFERING = 0x20000000,
     }
 }

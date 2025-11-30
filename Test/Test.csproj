@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KeyCodeMappings\KeyCodeMappings.csproj" />
     <ProjectReference Include="..\SimpleAdbSocket\SimpleAdbSocket.csproj" />
     <ProjectReference Include="..\SimpleSetupDiQuery\SimpleSetupDiQuery.csproj" />
     <ProjectReference Include="..\SimpleWin32Input\SimpleWin32Input.csproj" />

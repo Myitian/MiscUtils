@@ -59,19 +59,9 @@ public ref struct SpanSplitEnumerator(
         finished = false;
         Current = [];
     }
-
+#if NET9_0_OR_GREATER
     public readonly void Dispose()
     {
     }
-}
-
-public static class SpanSplitExtension
-{
-    public static SpanSplitEnumerator Split(
-        this ReadOnlySpan<char> span,
-        char separator = ' ',
-        StringSplitOptions options = StringSplitOptions.None)
-    {
-        return new(span, separator, options);
-    }
+#endif
 }

@@ -49,7 +49,7 @@ public class AdbTcpTunnel : IDisposable, IAsyncDisposable
         if (code != 0 || !(string.IsNullOrEmpty(message) || int.TryParse(message, out localPort)))
         {
             if (!noThrow)
-                throw new Exception(message) { HResult = code };
+                throw new Exception($"Unexcepted exit ({code}): {message}") { HResult = code };
             return null;
         }
         TcpClient? client = null;
