@@ -18,45 +18,45 @@ public class Program
         {
             Thread.Sleep(100);
             Input.Send([
-                new(new KeyboardInput(VirtualKey.LShift, false)),
-                new(new KeyboardInput(VirtualKey.H, false)),
-                new(new KeyboardInput(VirtualKey.H, true)),
-                new(new KeyboardInput(VirtualKey.LShift, true))]);
+                new KeyboardInput(VirtualKey.LShift, false),
+                new KeyboardInput(VirtualKey.H, false),
+                new KeyboardInput(VirtualKey.H, true),
+                new KeyboardInput(VirtualKey.LShift, true)]);
             Input.Send([
-                new(new KeyboardInput(VirtualKey.E, false)),
-                new(new KeyboardInput(VirtualKey.E, true)),
-                new(new KeyboardInput(VirtualKey.L, false)),
-                new(new KeyboardInput(VirtualKey.L, true)),
-                new(new KeyboardInput(VirtualKey.L, false)),
-                new(new KeyboardInput(VirtualKey.L, true))]);
+                new KeyboardInput(VirtualKey.E, false),
+                new KeyboardInput(VirtualKey.E, true),
+                new KeyboardInput(VirtualKey.L, false),
+                new KeyboardInput(VirtualKey.L, true),
+                new KeyboardInput(VirtualKey.L, false),
+                new KeyboardInput(VirtualKey.L, true)]);
             new KeyboardInput(VirtualKey.O, false).SendEvent();
             new KeyboardInput(VirtualKey.O, true).SendEvent();
             new KeyboardInput(VirtualKey.OemComma, false).SendEvent();
             new KeyboardInput(VirtualKey.OemComma, true).SendEvent();
             Input.Send([
-                new(new KeyboardInput(VirtualKey.Space, false)),
-                new(new KeyboardInput(VirtualKey.Space, true)),
-                new(new KeyboardInput(VirtualKey.W, false)),
-                new(new KeyboardInput(VirtualKey.W, true)),
-                new(new KeyboardInput(VirtualKey.O, false)),
-                new(new KeyboardInput(VirtualKey.O, true)),
-                new(new KeyboardInput(VirtualKey.R, false)),
-                new(new KeyboardInput(VirtualKey.R, true)),
-                new(new KeyboardInput(VirtualKey.L, false)),
-                new(new KeyboardInput(VirtualKey.L, true)),
-                new(new KeyboardInput(VirtualKey.D, false)),
-                new(new KeyboardInput(VirtualKey.D, true)),
-                new(new KeyboardInput(VirtualKey.LShift, false)),
-                new(new KeyboardInput(VirtualKey.D1, false)),
-                new(new KeyboardInput(VirtualKey.D1, true)),
-                new(new KeyboardInput(VirtualKey.LShift, true))]);
+                new KeyboardInput(VirtualKey.Space, false),
+                new KeyboardInput(VirtualKey.Space, true),
+                new KeyboardInput(VirtualKey.W, false),
+                new KeyboardInput(VirtualKey.W, true),
+                new KeyboardInput(VirtualKey.O, false),
+                new KeyboardInput(VirtualKey.O, true),
+                new KeyboardInput(VirtualKey.R, false),
+                new KeyboardInput(VirtualKey.R, true),
+                new KeyboardInput(VirtualKey.L, false),
+                new KeyboardInput(VirtualKey.L, true),
+                new KeyboardInput(VirtualKey.D, false),
+                new KeyboardInput(VirtualKey.D, true),
+                new KeyboardInput(VirtualKey.LShift, false),
+                new KeyboardInput(VirtualKey.D1, false),
+                new KeyboardInput(VirtualKey.D1, true),
+                new KeyboardInput(VirtualKey.LShift, true)]);
             new KeyboardInput(VirtualKey.Space, false).SendEvent();
             new KeyboardInput(VirtualKey.Space, true).SendEvent();
             Input.Send([
-                new(new KeyboardInput('你')),
-                new(new KeyboardInput('好')),
-                new(new KeyboardInput('世')),
-                new(new KeyboardInput('界'))]);
+                new KeyboardInput('你'),
+                new KeyboardInput('好'),
+                new KeyboardInput('世'),
+                new KeyboardInput('界')]);
         });
         Console.ReadLine();
 

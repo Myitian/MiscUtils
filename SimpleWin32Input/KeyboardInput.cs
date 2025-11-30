@@ -11,6 +11,9 @@ public partial struct KeyboardInput
     public uint Time;
     public nint ExtraInfo;
 
+    public KeyboardInput(ConsoleKey ck, bool keyUp) : this((VirtualKey)ck, keyUp)
+    {
+    }
     public KeyboardInput(VirtualKey vk, bool keyUp)
     {
         Vk = vk;
@@ -39,7 +42,13 @@ public partial struct KeyboardInput
     [LibraryImport("user32", EntryPoint = "keybd_event")]
     private static partial void KeyboardEvent(byte bVk, byte bScan, KeyboardEventFlag dwFlags, nint dwExtraInfo);
 
-    /// <summary>Use <c>keybd_event</c>. Not recommended.</summary>
+    /// <summary>
+    /// Calls <c>keybd_event</c>. Recommended to use <see cref="Input.Send"/> instead of this.
+    /// </summary>
+    /// <remarks>
+    /// When using <see cref="KeyboardEventFlag.Unicode" /> may not produce correct results
+    /// because the value is truncated to <see cref="byte" />.
+    /// </remarks>
     public readonly void SendEvent()
     {
         KeyboardEvent((byte)Vk, (byte)Scan, Flags, ExtraInfo);

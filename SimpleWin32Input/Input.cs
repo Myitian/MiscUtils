@@ -39,4 +39,11 @@ public partial struct Input
     {
         return SendInput(inputs.Length, inputs, Size);
     }
+
+    public static implicit operator Input(MouseInput mi) => new(mi);
+    public static implicit operator Input(KeyboardInput ki) => new(ki);
+    public static implicit operator Input(HardwareInput hi) => new(hi);
+    public static explicit operator MouseInput(Input input) => input.MI;
+    public static explicit operator KeyboardInput(Input input) => input.KI;
+    public static explicit operator HardwareInput(Input input) => input.HI;
 }
