@@ -1,8 +1,7 @@
 ﻿using KeyCodeMappings;
-using SimpleAdbSocket;
 using SimpleSetupDiQuery;
+using SimpleWin32HardLink;
 using SimpleWin32Input;
-using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -16,9 +15,22 @@ public class Program
     public static async Task Main()
     {
         Console.WriteLine(Unsafe.SizeOf<Input>());
+        while (Console.ReadLine() is string line and not "")
+        {
+            line = line.AsSpan().Trim().Trim('"').ToString();
+            foreach (ReadOnlyMemory<char> file in new HardLinkTargetEnumerator(line))
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("* ");
+                Console.ResetColor();
+                Console.WriteLine(file.Span);
+            }
+        }
+        //PrintMappings();
+
         _ = Task.Run(() =>
         {
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
             Input.Send([
                 new KeyboardInput(VirtualKey.LShift, false),
                 new KeyboardInput(VirtualKey.H, false),
@@ -53,16 +65,30 @@ public class Program
                 new KeyboardInput(VirtualKey.D1, true),
                 new KeyboardInput(VirtualKey.LShift, true)]);
             new KeyboardInput(VirtualKey.Space, false).SendEvent();
+            Span<Input> span = [
+                new KeyboardInput('你', false),
+                new KeyboardInput('好', false),
+                new KeyboardInput('世', false),
+                new KeyboardInput('界', false)];
+            Input.Send(span);
+            for (int i = 0; i < span.Length; i++)
+            {
+                span[i].U.KI.Flags |= KeyboardEventFlag.KeyUp;
+            }
+            Input.Send(span);
             new KeyboardInput(VirtualKey.Space, true).SendEvent();
-            Input.Send([
-                new KeyboardInput('你'),
-                new KeyboardInput('好'),
-                new KeyboardInput('世'),
-                new KeyboardInput('界')]);
         });
         Console.ReadLine();
-
-        PrintMappings();
+        Input.Send(new KeyboardInput()
+        {
+            Scan = 0xE037,
+            Flags = KeyboardEventFlag.ScanCode
+        });
+        Input.Send(new KeyboardInput()
+        {
+            Scan = 0xE037,
+            Flags = KeyboardEventFlag.ScanCode | KeyboardEventFlag.KeyUp
+        });
 
         if (!ListDevices(in USB_DEVICE))
         {
@@ -70,11 +96,11 @@ public class Program
             Console.WriteLine($"Failed to list devices: (0x{error:X8}){error}");
         }
 
-        using AdbTcpTunnel? tunnel = await AdbTcpTunnel.CreateAsync(1234, 5678);
-        if (tunnel is not null)
-        {
-            using TcpClient? client = tunnel.Client;
-        }
+        //using AdbTcpTunnel? tunnel = await AdbTcpTunnel.CreateAsync(1234, 5678);
+        //if (tunnel is not null)
+        //{
+        //    using TcpClient? client = tunnel.Client;
+        //}
     }
 
 
@@ -168,7 +194,7 @@ public class Program
 
     public static bool ListDevices(in Guid guid)
     {
-        DeviceInterfaceEnumerable deviceInfoSet = new(in guid, SetupDiGetClassFlag.PRESENT | SetupDiGetClassFlag.DEVICEINTERFACE);
+        using DeviceInterfaceEnumerable deviceInfoSet = new(in guid, SetupDiGetClassFlag.PRESENT | SetupDiGetClassFlag.DEVICEINTERFACE);
         if (deviceInfoSet.IsInvalid)
             return false;
         foreach (DeviceInterfaceData data in deviceInfoSet)

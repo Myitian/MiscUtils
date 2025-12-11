@@ -12,8 +12,10 @@
     <ProjectReference Include="..\KeyCodeMappings\KeyCodeMappings.csproj" />
     <ProjectReference Include="..\SimpleAdbSocket\SimpleAdbSocket.csproj" />
     <ProjectReference Include="..\SimpleSetupDiQuery\SimpleSetupDiQuery.csproj" />
+    <ProjectReference Include="..\SimpleWin32HardLink\SimpleWin32HardLink.csproj" />
     <ProjectReference Include="..\SimpleWin32Input\SimpleWin32Input.csproj" />
     <ProjectReference Include="..\SimpleWinUSB\SimpleWinUSB.csproj" />
+    <ProjectReference Include="..\Win32Cursor\SimpleWin32Cursor.csproj" />
   </ItemGroup>
 
 </Project>

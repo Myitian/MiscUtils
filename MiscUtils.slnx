@@ -1,8 +1,11 @@
 <Solution>
+  <Project Path="FormTest/FormTest.csproj" Id="266346e2-e54c-49ce-a4c8-9e9b17177c3c" />
   <Project Path="KeyCodeMappings/KeyCodeMappings.csproj" />
   <Project Path="SimpleAdbSocket/SimpleAdbSocket.csproj" />
   <Project Path="SimpleSetupDiQuery/SimpleSetupDiQuery.csproj" />
+  <Project Path="SimpleWin32HardLink/SimpleWin32HardLink.csproj" Id="eaea3360-e6c1-4405-8f19-9d44c1b3788e" />
   <Project Path="SimpleWin32Input/SimpleWin32Input.csproj" />
   <Project Path="SimpleWinUSB/SimpleWinUSB.csproj" />
   <Project Path="Test/Test.csproj" />
+  <Project Path="Win32Cursor/SimpleWin32Cursor.csproj" Id="5c50c5dc-16f2-445f-9f02-9b4095392c97" />
 </Solution>
