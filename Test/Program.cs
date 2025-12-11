@@ -17,8 +17,7 @@ public class Program
         Console.WriteLine(Unsafe.SizeOf<Input>());
         while (Console.ReadLine() is string line and not "")
         {
-            line = line.AsSpan().Trim().Trim('"').ToString();
-            foreach (ReadOnlyMemory<char> file in new HardLinkTargetEnumerator(line))
+            foreach (ReadOnlyMemory<char> file in HardLinkTargetEnumerator.Create(line.AsSpan().Trim().Trim('"')))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("* ");

@@ -21,9 +21,9 @@ public partial struct HardLinkTargetEnumerator
     public readonly ReadOnlyMemory<char> Current => _mem.Memory[.._length];
     readonly object IEnumerator.Current => Current;
 
-    public HardLinkTargetEnumerator(scoped ReadOnlySpan<char> lpFileName, int initalCapacity = 128)
+    private HardLinkTargetEnumerator(scoped ReadOnlySpan<char> lpFileName, int? initalCapacity = null)
     {
-        EnsureCapacity(initalCapacity);
+        EnsureCapacity(initalCapacity ?? lpFileName.Length);
         int length = Capacity;
         while ((_handle = FindFirstFileNameW(lpFileName, 0, ref length, _mem.Memory.Span)) is -1)
         {
@@ -43,6 +43,38 @@ public partial struct HardLinkTargetEnumerator
         }
         _length = length - 1; // remove '\0'
     }
+    public static HardLinkTargetEnumerator CreateUnsafe(scoped ReadOnlySpan<char> fileName, int? initalCapacity = null)
+    {
+        return new(fileName, initalCapacity);
+    }
+    public static HardLinkTargetEnumerator Create(scoped ReadOnlySpan<char> fileName, int? initalCapacity = null)
+    {
+        int length = fileName.Length + 1;
+        if (length <= 256)
+        {
+            Span<char> span = stackalloc char[length];
+            fileName.CopyTo(span);
+            span[fileName.Length] = '\0';
+            return CreateUnsafe(span, initalCapacity);
+        }
+        char[] buffer = ArrayPool<char>.Shared.Rent(length);
+        try
+        {
+            Span<char> span = buffer;
+            fileName.CopyTo(span);
+            span[fileName.Length] = '\0';
+            return CreateUnsafe(span, initalCapacity);
+        }
+        finally
+        {
+            ArrayPool<char>.Shared.Return(buffer);
+        }
+    }
+    public static HardLinkTargetEnumerator Create(string fileName, int? initalCapacity = null)
+    {
+        return CreateUnsafe(fileName, initalCapacity);
+    }
+
     [MemberNotNull(nameof(_mem))]
     public void EnsureCapacity(int capacity)
     {
