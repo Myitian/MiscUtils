@@ -1,3 +1,4 @@
+using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -40,12 +41,12 @@ public partial struct DeviceInfoData(nint deviceInfoSet)
 
     public readonly bool TryGetProperty<T>(in DevicePropertyKey key, out T property) where T : struct
     {
-        Unsafe.SkipInit(out property);
+        property = default;
         return SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out _, ref Unsafe.As<T, byte>(ref property), (uint)Unsafe.SizeOf<T>(), out _);
     }
     public readonly bool TryGetProperty<T>(in DevicePropertyKey key, [NotNullWhen(true)] out T[]? property)
     {
-        Unsafe.SkipInit(out property);
+        property = default;
         uint elementSize = (uint)Unsafe.SizeOf<T>();
         SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out DevicePropertyType type, ref Unsafe.NullRef<byte>(), 0, out uint size);
         (uint count, uint rem) = Math.DivRem(size, elementSize);
@@ -56,40 +57,52 @@ public partial struct DeviceInfoData(nint deviceInfoSet)
     }
     public readonly bool TryGetProperty(in DevicePropertyKey key, [NotNullWhen(true)] out string? property)
     {
-        Unsafe.SkipInit(out property);
+        property = default;
         SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out DevicePropertyType type, ref Unsafe.NullRef<byte>(), 0, out uint size);
         if (size > Array.MaxLength || type is not (DevicePropertyType.STRING
             or DevicePropertyType.STRING_INDIRECT
             or DevicePropertyType.SECURITY_DESCRIPTOR_STRING))
             return false;
-        using IMemoryOwner<byte> mem = MemoryPool<byte>.Shared.Rent((int)size);
-        Span<byte> buffer = mem.Memory.Span;
-        if (!SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out _, ref buffer[0], size, out _))
-            return false;
-        ReadOnlySpan<char> chars = MemoryMarshal.Cast<byte, char>(buffer[..(int)size]);
-        if (chars.IndexOf('\0') is >= 0 and int nullChar)
-            chars = chars[..nullChar];
-        property = new(chars);
-        return true;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent((int)size);
+        try
+        {
+            if (!SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out _, ref buffer[0], size, out _))
+                return false;
+            ReadOnlySpan<char> chars = MemoryMarshal.Cast<byte, char>(buffer.AsSpan((int)size));
+            if (chars.IndexOf('\0') is >= 0 and int nullChar)
+                chars = chars[..nullChar];
+            property = new(chars);
+            return true;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
     public readonly bool TryGetProperty(in DevicePropertyKey key, [NotNullWhen(true)] out List<string>? property)
     {
-        Unsafe.SkipInit(out property);
+        property = default;
         SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out DevicePropertyType type, ref Unsafe.NullRef<byte>(), 0, out uint size);
         if (size > Array.MaxLength || !type.HasFlag(DevicePropertyType.LIST)) // only string can have flag LIST
             return false;
-        using IMemoryOwner<byte> mem = MemoryPool<byte>.Shared.Rent((int)size);
-        Span<byte> buffer = mem.Memory.Span;
-        if (!SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out _, ref buffer[0], size, out _))
-            return false;
-        property = [];
-        ReadOnlySpan<char> chars = MemoryMarshal.Cast<byte, char>(buffer[..(int)size]);
-        while (chars.IndexOf('\0') is > 0 and int nullChar)
+        byte[] buffer = ArrayPool<byte>.Shared.Rent((int)size);
+        try
         {
-            property.Add(new(chars[..nullChar]));
-            chars = chars[(nullChar + 1)..];
+            if (!SetupDiGetDevicePropertyW(DeviceInfoSet, in this, in key, out _, ref buffer[0], size, out _))
+                return false;
+            property = [];
+            ReadOnlySpan<char> chars = MemoryMarshal.Cast<byte, char>(buffer.AsSpan((int)size));
+            while (chars.IndexOf('\0') is > 0 and int nullChar)
+            {
+                property.Add(new(chars[..nullChar]));
+                chars = chars[(nullChar + 1)..];
+            }
+            return true;
         }
-        return true;
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
 

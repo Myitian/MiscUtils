@@ -44,16 +44,23 @@ public partial struct DeviceInterfaceData(nint deviceInfoSet)
         SetupDiGetDeviceInterfaceDetailW(DeviceInfoSet, in this, ref Unsafe.NullRef<byte>(), 0, out int size, ref Unsafe.NullRef<DeviceInfoData>());
         if (size < 8 || size > Array.MaxLength)
             return false;
-        using IMemoryOwner<byte> mem = MemoryPool<byte>.Shared.Rent(size);
-        Span<byte> buffer = mem.Memory.Span;
-        Unsafe.WriteUnaligned(ref buffer[0], 8);
-        if (!SetupDiGetDeviceInterfaceDetailW(DeviceInfoSet, in this, ref buffer[0], size, out _, ref devInfo))
-            return false;
-        ReadOnlySpan<char> chars = MemoryMarshal.Cast<byte, char>(buffer[4..size]);
-        int nullChar = chars.IndexOf('\0');
-        if (nullChar >= 0)
-            chars = chars[..nullChar];
-        devicePath = new(chars);
-        return true;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            // [length][data ...]
+            Unsafe.WriteUnaligned(ref buffer[0], 8);
+            if (!SetupDiGetDeviceInterfaceDetailW(DeviceInfoSet, in this, ref buffer[0], size, out _, ref devInfo))
+                return false;
+            ReadOnlySpan<char> chars = MemoryMarshal.Cast<byte, char>(buffer.AsSpan(4, size - 4));
+            int nullChar = chars.IndexOf('\0');
+            if (nullChar >= 0)
+                chars = chars[..nullChar];
+            devicePath = new(chars);
+            return true;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 }
