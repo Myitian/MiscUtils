@@ -15,7 +15,6 @@
     <ProjectReference Include="..\SimpleWin32HardLink\SimpleWin32HardLink.csproj" />
     <ProjectReference Include="..\SimpleWin32Input\SimpleWin32Input.csproj" />
     <ProjectReference Include="..\SimpleWinUSB\SimpleWinUSB.csproj" />
-    <ProjectReference Include="..\Win32Cursor\SimpleWin32Cursor.csproj" />
   </ItemGroup>
 
 </Project>
